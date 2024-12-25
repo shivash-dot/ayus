@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC Prelims Exam Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        canvas {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        h3 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>UPSC Prelims Exam Results</h2>
+
+    <!-- Qualified Students Chart -->
+    <h3>Qualified Students (CSAT Marks >= 66) 🎉</h3>
+    <canvas id="qualifiedChart" width="800" height="400"></canvas>
+
+    <!-- Disqualified Students Chart -->
+    <h3>Disqualified Students (CSAT Marks < 66) 😔</h3>
+    <canvas id="disqualifiedChart" width="800" height="400"></canvas>
+
+    <script>
+        const students = [
+            "DILKHUSH", "SANJU SAINI", "SONIYA", "KIRAN", "LOVE", "UATTAM", 
+            "ROHIT", "AYUSH", "GEETA", "SANJU SOLANKI", "RASNA", "POONAM", 
+            "PRIYA", "NITESH"
+        ];
+
+        const csat_marks = [88, 66.67, 51.17, 82, 75, 70.55, 46.84, 81.67, 62.5, 51.66, 59.16, 18.33, 30.88, 47.5];
+        const gs_marks = [74, 100.66, 133.33, 57.34, 64.66, 68.66, 38, 53.34, 148, 44, 86.34, 103.33, 77.34, 137.34];
+
+        // Checking for qualified and disqualified students (CSAT marks >= 66)
+        const qualified = students.filter((student, index) => csat_marks[index] >= 66);
+        const disqualified = students.filter((student, index) => csat_marks[index] < 66);
+
+        // Separate data for qualified and disqualified students
+        const qualified_csat_marks = csat_marks.filter((marks, index) => csat_marks[index] >= 66);
+        const disqualified_csat_marks = csat_marks.filter((marks, index) => csat_marks[index] < 66);
+        
+        const qualified_gs_marks = gs_marks.filter((marks, index) => csat_marks[index] >= 66);
+        const disqualified_gs_marks = gs_marks.filter((marks, index) => csat_marks[index] < 66);
+
+        // Color for the bars (green for qualified, red for disqualified)
+        const qualified_colors = Array(qualified.length).fill('green');
+        const disqualified_colors = Array(disqualified.length).fill('red');
+
+        // Qualified Students Chart
+        const ctx1 = document.getElementById('qualifiedChart').getContext('2d');
+        const qualifiedChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: qualified,
+                datasets: [{
+                    label: 'General Studies Marks (Out of 200)',
+                    data: qualified_gs_marks,
+                    backgroundColor: qualified_colors,
+                    borderColor: 'black',
+                    borderWidth: 1
+                }, {
+                    label: 'CSAT Marks (Out of 200)',
+                    data: qualified_csat_marks,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'black',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    datalabels: {
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        // Positioning data labels above the bars
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: function(value, context) {
+                            if (context.datasetIndex === 0) {
+                                return `${value}\nCSAT: ${qualified_csat_marks[context.dataIndex]}`;
+                            } else {
+                                return `${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Students'
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        max: 200,
+                        title: {
+                            display: true,
+                            text: 'Marks (Out of 200)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Disqualified Students Chart
+        const ctx2 = document.getElementById('disqualifiedChart').getContext('2d');
+        const disqualifiedChart = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: disqualified,
+                datasets: [{
+                    label: 'General Studies Marks (Out of 200)',
+                    data: disqualified_gs_marks,
+                    backgroundColor: disqualified_colors,
+                    borderColor: 'black',
+                    borderWidth: 1
+                }, {
+                    label: 'CSAT Marks (Out of 200)',
+                    data: disqualified_csat_marks,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'black',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    datalabels: {
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        // Positioning data labels above the bars
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: function(value, context) {
+                            if (context.datasetIndex === 0) {
+                                return `${value}\nCSAT: ${disqualified_csat_marks[context.dataIndex]}`;
+                            } else {
+                                return `${value}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Students'
+                        }
+                    },
+                    y: {
+                        min: 0,
+                        max: 200,
+                        title: {
+                            display: true,
+                            text: 'Marks (Out of 200)'
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+
+    <!-- Include Chart.js Data Labels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+</body>
+</html>
